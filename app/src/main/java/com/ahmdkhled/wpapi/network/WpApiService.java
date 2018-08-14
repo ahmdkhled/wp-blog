@@ -20,5 +20,8 @@ public interface WpApiService {
     Call<ResponseBody> getCategory(@Query("include") String ids);
 
     @GET("comments")
-    Call<ResponseBody> getComments(@Query("post") int postId);
+    Call<ResponseBody> getComments(@Query("post") int postId,@Query("page") int page,@Query("parent") int parent);
+
+    @GET("comments")
+    Call<ResponseBody> getReplies(@Query("page") int page,@Query("parent") int parent);
 }

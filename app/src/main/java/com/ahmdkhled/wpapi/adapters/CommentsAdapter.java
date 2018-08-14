@@ -2,18 +2,30 @@ package com.ahmdkhled.wpapi.adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ahmdkhled.wpapi.R;
 import com.ahmdkhled.wpapi.model.Comment;
+import com.ahmdkhled.wpapi.network.CommentsParser;
+import com.ahmdkhled.wpapi.network.RetrofitClient;
+import com.bumptech.glide.Glide;
 
+import java.io.IOException;
 import java.util.ArrayList;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by Ahmed Khaled on 7/31/2018.
@@ -48,10 +60,14 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
 
     class CommentHolder extends RecyclerView.ViewHolder{
         TextView content,authorName;
+        ImageView authorAvatar;
+        RecyclerView repliesReycler;
         public CommentHolder(View itemView) {
             super(itemView);
             content=itemView.findViewById(R.id.commentContent);
             authorName=itemView.findViewById(R.id.commentAuthor);
+            authorAvatar=itemView.findViewById(R.id.commentAuthorAvatar);
+            repliesReycler=itemView.findViewById(R.id.repliesRecycler);
         }
 
         void populateData(int pos){
@@ -61,9 +77,39 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
             } else {
                 commentContent = Html.fromHtml(comments.get(pos).getContent());
             }
-
             content.setText(commentContent);
-            authorName.setText(comments.get(pos).getAuthorName());
+            authorName.setText(comments.get(pos).getAuthor().getName());
+
+            if (!TextUtils.isEmpty(comments.get(pos).getAuthor().getAvatar_url())) {
+                Glide.with(context).load(comments.get(pos).getAuthor().getAvatar_url())
+                        .into(authorAvatar);
+            }
+
+            loadReplies(comments.get(pos).getId());
         }
+
+        void loadReplies(int parent){
+            RetrofitClient.getApiService().getReplies(1,parent).enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                    try {
+                        String result =response.body().string();
+                        ArrayList<Comment> replies= CommentsParser.parse(result);
+                        comments.get(getAdapterPosition()).setReplies(replies);
+                        RepliesAdapter repliesAdapter=new RepliesAdapter(context,replies);
+                        repliesReycler.setAdapter(repliesAdapter);
+                        repliesReycler.setLayoutManager(new LinearLayoutManager(context));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                @Override
+                public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+
+                }
+            });
+        }
+
     }
+
 }

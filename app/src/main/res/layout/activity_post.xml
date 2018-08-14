@@ -76,28 +76,16 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:id="@+id/webview"
+              android:visibility="gone"
               app:layout_constraintTop_toBottomOf="@id/categriesRecycler"
               />
 
-          <TextView
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:id="@+id/commentsCount"
-              tools:text="10 comments"
-              android:textSize="20sp"
-              android:textStyle="bold"
-              android:textColor="#212121"
-              app:layout_constraintTop_toBottomOf="@+id/webview"
-              app:layout_constraintStart_toStartOf="parent"
-              android:layout_marginLeft="5dp"
-              android:layout_marginStart="5dp"
-              android:layout_marginTop="5dp"
-               />
+
 
           <LinearLayout
               android:layout_width="match_parent"
               android:layout_height="40dp"
-              app:layout_constraintTop_toBottomOf="@id/commentsCount"
+              app:layout_constraintTop_toBottomOf="@id/webview"
               android:background="@drawable/comment_bg"
               android:orientation="horizontal"
               app:layout_constraintStart_toStartOf="parent"

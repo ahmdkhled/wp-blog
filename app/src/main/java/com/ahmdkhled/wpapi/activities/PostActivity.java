@@ -44,7 +44,7 @@ public class PostActivity extends AppCompatActivity {
     public static final String POST_KEY="post_key";
     Post post;
     ImageView thumnail;
-    TextView title,commentsCount;
+    TextView title;
     int mediaId;
     RecyclerView categoriesRecyler;
     RecyclerView commentsRecyler;
@@ -56,7 +56,6 @@ public class PostActivity extends AppCompatActivity {
         WebView webView=findViewById(R.id.webview);
         thumnail=findViewById(R.id.postThumbnail);
         title=findViewById(R.id.title);
-        commentsCount=findViewById(R.id.commentsCount);
         categoriesRecyler=findViewById(R.id.categriesRecycler);
         commentsRecyler=findViewById(R.id.commentsRecycler);
         Toolbar toolbar=findViewById(R.id.toolbar);
@@ -91,14 +90,13 @@ public class PostActivity extends AppCompatActivity {
 
 
     void loadComments(int postId){
-        RetrofitClient.getApiService().getComments(postId).enqueue(new Callback<ResponseBody>() {
+        RetrofitClient.getApiService().getComments(postId,1,0).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 try {
                     String result =response.body().string();
-                    ArrayList<Comment> comments= CommentsParser.parse(result);
-                    int count=CommentsParser.getCommentsCount(result);
-                    populateComments(comments,count);
+                    ArrayList<Comment> comments=CommentsParser.parse(result);
+                    populateComments(comments);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -111,13 +109,12 @@ public class PostActivity extends AppCompatActivity {
         });
     }
 
-    private void populateComments(ArrayList<Comment> comments,int count) {
+    private void populateComments(ArrayList<Comment> comments) {
         CommentsAdapter commentsAdapter=new CommentsAdapter(this,comments);
         commentsRecyler.setAdapter(commentsAdapter);
         commentsRecyler.removeItemDecoration(dividerDecoration);
         commentsRecyler.addItemDecoration(dividerDecoration);
         commentsRecyler.setLayoutManager(new LinearLayoutManager(this));
-        commentsCount.setText(count+" comments");
     }
 
     void loadCategories(){
