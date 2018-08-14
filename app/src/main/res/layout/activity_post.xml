@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.ahmdkhled.wpapi.activities.PostActivity">
+
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:contentScrim="@color/colorPrimary"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:id="@+id/postThumbnail"
+                android:scaleType="fitXY"
+                app:layout_collapseMode="parallax"
+                tools:src="@color/colorAccent"/>
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_collapseMode="pin"
+                android:layout_gravity="bottom"
+                android:theme="@style/toolbarTheme"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/title"
+                    android:fontFamily="casual"
+                    android:textSize="20sp"
+                    tools:text="post title"
+                    android:singleLine="true"
+                    android:ellipsize="marquee"
+                    android:marqueeRepeatLimit ="marquee_forever"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:scrollHorizontally="true"
+                    android:textColor="#fff"/>
+            </android.support.v7.widget.Toolbar>
+
+
+        </android.support.design.widget.CollapsingToolbarLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+      <android.support.constraint.ConstraintLayout
+          android:layout_width="match_parent"
+          android:layout_height="match_parent">
+
+          <android.support.v7.widget.RecyclerView
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:id="@+id/categriesRecycler"
+              app:layout_constraintTop_toTopOf="parent"/>
+
+          <WebView
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:id="@+id/webview"
+              app:layout_constraintTop_toBottomOf="@id/categriesRecycler"
+              />
+
+          <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:id="@+id/commentsCount"
+              tools:text="10 comments"
+              android:textSize="20sp"
+              android:textStyle="bold"
+              android:textColor="#212121"
+              app:layout_constraintTop_toBottomOf="@+id/webview"
+              app:layout_constraintStart_toStartOf="parent"
+              android:layout_marginLeft="5dp"
+              android:layout_marginStart="5dp"
+              android:layout_marginTop="5dp"
+               />
+
+          <LinearLayout
+              android:layout_width="match_parent"
+              android:layout_height="40dp"
+              app:layout_constraintTop_toBottomOf="@id/commentsCount"
+              android:background="@drawable/comment_bg"
+              android:orientation="horizontal"
+              app:layout_constraintStart_toStartOf="parent"
+              android:id="@+id/comment_contaner">
+              <EditText
+                  android:layout_width="0dp"
+                  android:layout_height="match_parent"
+                  android:id="@+id/commentContent"
+                  android:padding="5dp"
+                  android:background="@null"
+                  android:hint="write your comment"
+                  android:layout_weight="1"/>
+
+              <ImageView
+                  android:layout_width="30dp"
+                  android:layout_height="30dp"
+                  android:scaleType="fitXY"
+                  android:layout_gravity="center_vertical"
+                  android:src="@drawable/ic_send_black_24dp"
+                  android:id="@+id/postComment"
+                  android:layout_marginRight="5dp"
+                  android:layout_marginEnd="5dp" />
+
+          </LinearLayout>
+
+
+
+          <android.support.v7.widget.RecyclerView
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:id="@+id/commentsRecycler"
+              app:layout_constraintTop_toBottomOf="@id/comment_contaner">
+
+          </android.support.v7.widget.RecyclerView>
+
+      </android.support.constraint.ConstraintLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+</android.support.design.widget.CoordinatorLayout>
