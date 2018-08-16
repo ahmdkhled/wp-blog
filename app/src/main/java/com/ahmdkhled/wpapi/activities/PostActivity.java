@@ -40,12 +40,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class PostActivity extends AppCompatActivity {
+public class PostActivity extends AppCompatActivity implements CommentsAdapter.OnNavigationButtonsClickListener{
     public static final String POST_KEY="post_key";
     Post post;
     ImageView thumnail;
     TextView title;
-    int mediaId;
+    int commentsPage=1;
     RecyclerView categoriesRecyler;
     RecyclerView commentsRecyler;
     DividerItemDecoration dividerDecoration;
@@ -69,7 +69,6 @@ public class PostActivity extends AppCompatActivity {
              post=getIntent().getParcelableExtra(POST_KEY);
         }
 
-        mediaId=post.getMediaId();
         String content=post.getContent();
         //webView.loadData(content,"text/html; charset=utf-8","UTF-8");
         webView.loadDataWithBaseURL(null,content,"text/html; charset=utf-8","UTF-8",null);
@@ -82,23 +81,31 @@ public class PostActivity extends AppCompatActivity {
         }
         title.setText(post.getTitle());
         loadCategories();
-        loadComments(post.getId());
+        loadComments(post.getId(),commentsPage);
 
         Log.d("TAGG",appendCategoriesIds(post.getCategories()));
 
     }
 
 
-    void loadComments(int postId){
-        RetrofitClient.getApiService().getComments(postId,1,0).enqueue(new Callback<ResponseBody>() {
+    void loadComments(final int postId, int page){
+        RetrofitClient.getApiService().getComments(postId,page,0).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                try {
-                    String result =response.body().string();
-                    ArrayList<Comment> comments=CommentsParser.parse(result);
-                    populateComments(comments);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                if (response.isSuccessful()) {
+                    try {
+                        String result = response.body().string();
+                        if (result.equals("[]")){
+                            commentsPage--;
+                            Toast.makeText(getApplicationContext(), "this is the last page", Toast.LENGTH_SHORT).show();
+                        }else {
+                            ArrayList<Comment> comments = CommentsParser.parse(result);
+                            populateComments(comments);
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 
@@ -110,7 +117,7 @@ public class PostActivity extends AppCompatActivity {
     }
 
     private void populateComments(ArrayList<Comment> comments) {
-        CommentsAdapter commentsAdapter=new CommentsAdapter(this,comments);
+        CommentsAdapter commentsAdapter=new CommentsAdapter(this,comments,this);
         commentsRecyler.setAdapter(commentsAdapter);
         commentsRecyler.removeItemDecoration(dividerDecoration);
         commentsRecyler.addItemDecoration(dividerDecoration);
@@ -157,4 +164,19 @@ public class PostActivity extends AppCompatActivity {
         return sb.toString();
     }
 
+    @Override
+    public void onNextButtonClickListener() {
+        commentsPage++;
+        loadComments(post.getId(),commentsPage);
+    }
+
+    @Override
+    public void onLastButtonClickListener() {
+        if (commentsPage==1){
+            Toast.makeText(getApplicationContext(),"this is the first page",Toast.LENGTH_SHORT).show();
+        }else {
+            commentsPage--;
+            loadComments(post.getId(),commentsPage);
+        }
+    }
 }
