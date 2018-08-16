@@ -7,12 +7,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ImageView
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:id="@+id/commentAuthorAvatar"
-        android:src="@drawable/ic_account_circle_black_24dp"
-        android:scaleType="fitXY"/>
+        tools:src="@drawable/ic_account_circle_black_24dp"/>
 
     <TextView
         android:layout_width="0dp"

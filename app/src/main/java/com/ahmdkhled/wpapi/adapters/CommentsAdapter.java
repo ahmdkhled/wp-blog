@@ -22,6 +22,7 @@ import com.bumptech.glide.Glide;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -82,7 +83,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     class CommentHolder extends RecyclerView.ViewHolder{
         TextView content,authorName;
-        ImageView authorAvatar;
+        CircleImageView authorAvatar;
         RecyclerView repliesReycler;
         public CommentHolder(View itemView) {
             super(itemView);
