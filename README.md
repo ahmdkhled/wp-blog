@@ -1,6 +1,5 @@
 # wp-blog
-this is a blog app that fetches posts and comments from wordpress api.
-adadadasdsad
+this is a blog app that fetches posts and comments from wordpress api
 
 # screnshots
 
